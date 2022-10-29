@@ -5,6 +5,9 @@ const todoSchema = new Schema({
         type: String, required: [true, 'Title is required!'],
     },
     completed: {
-        type: Boolean, default: [false]
+        type: Boolean, default: false
     }
 }, { timestamps: true })
+
+const Todo = model('Todo', todoSchema)
+export default Todo
