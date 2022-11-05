@@ -5,12 +5,13 @@ const todoSchema = new Schema(
     title: {
       type: String,
       required: [true, "Title is required!"],
-      uniqued: true,
+      unique: true,
     },
     completed: {
       type: Boolean,
       default: false,
     },
+    user: { type: Schema.Types.ObjectId, ref: "User", required: true },
   },
   { timestamps: true }
 );

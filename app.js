@@ -1,6 +1,6 @@
 import express from "express";
 import "./config/db.config.js";
-import Todo from "./models/Todo.js";
+import Todo from "./models/Todo.model.js";
 import cors from "cors";
 
 const app = express();
