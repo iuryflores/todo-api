@@ -15,10 +15,10 @@ const userSchema = new Schema(
       type: String,
       required: true,
     },
-    todos: { type: Schema.Types.ObjectId, ref: "Todo", required: true },
+    todos: [{ type: Schema.Types.ObjectId, ref: "Todo" }],
   },
   { timestamps: true }
 );
 
-const User = mode("User", todoSchema);
+const User = model("User", userSchema);
 export default User;
