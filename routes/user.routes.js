@@ -44,7 +44,7 @@ router.post("/user/auth/signup", async (req, res) => {
     const newUser = await User.create({ name, email, passwordHash });
     const { _id } = newUser;
     res.status(201).json({ name, email, _id });
-    console.log(`User created sucessfully`, name, email, _id);
+    console.log(`User created sucessfully`, {name, email, _id});
   } catch (error) {
     res.status(400).json({ status: 400, msg: error });
     console.error(error);
