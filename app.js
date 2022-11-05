@@ -26,11 +26,13 @@ app.post("/todos", async (req, res) => {
   try {
     const todoFind = await Todo.findOne({ title: title });
     if (todoFind) {
-      return res.status(404).json({ msg: "Encontrado" });
+      console.log(`${todoFind.title} already exists!`);
+      return res.status(404).json({ msg: "Todo already exists!" });
     }
 
     const newTodo = await Todo.create(body);
     res.status(201).json(newTodo);
+    console.log(`${title} created successfully`);
   } catch (error) {
     res.status(400).json({ status: 400, msg: error });
   }
@@ -45,6 +47,7 @@ app.put("/todos/:id", async (req, res) => {
     const update = { completed: `${!old.completed}` };
     const todo = await Todo.findByIdAndUpdate(id, update, { new: true });
     res.status(201).json(update);
+    console.log(`${update.title} updated successfully`);
   } catch (error) {
     res.status(400), json({ status: 400, msg: error.message });
   }
@@ -56,9 +59,11 @@ app.delete("/todos/:id", async (req, res) => {
   try {
     const todo = await Todo.findByIdAndRemove(id);
     if (todo) {
-      res.status(201).json({ msg: `${todo.title} deletado com sucesso` });
+      res.status(201).json({ msg: `${todo.title} deleted successfully` });
+      console.log(`${todo.title} deleted successfully`);
     } else {
-      res.status(404).json({ msg: "Todo not found" });
+      res.status(404).json({ msg: "Not found" });
+      console.log("Not found!");
     }
   } catch (error) {
     res.status(400), json({ status: 400, msg: error.message });
