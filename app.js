@@ -1,9 +1,10 @@
 import express from 'express'
 import './config/db.config.js'
 import Todo from './models/Todo.js'
+import cors from 'cors'
 
 const app = express()
-
+app.use(cors());
 app.use(express.json())
 
 //Homepage
@@ -15,6 +16,7 @@ app.get('/', (req, res) => {
 app.get('/todos', async (req, res) => {
     const allTodos = await Todo.find()
     res.status(200).json(allTodos)
+    
 })
 
 //Post Todo
@@ -31,8 +33,10 @@ app.post('/todos', async (req, res) => {
 //Update Todo
 app.put('/todos/:id', async (req, res) => {
     const { id } = req.params
-    const update = { completed: true }
+  
     try {
+        const old = await Todo.findById(id)
+        const update = {completed: `${!old.completed}` }
         const todo = await Todo.findByIdAndUpdate(id, update, { new: true })
         res.status(201).json(update)
     } catch (error) {
