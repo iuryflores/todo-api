@@ -9,6 +9,7 @@ import todoRoutes from "./routes/todo.routes.js";
 import todoUsers from "./routes/user.routes.js";
 
 import cors from "cors";
+import handleError from './error-handling/index.js';
 
 const app = express();
 
@@ -22,7 +23,7 @@ app.use(express.json());
 app.use("/", todoRoutes);
 app.use("/", todoUsers);
 
-
+handleError(app)
 
 //Listening
 app.listen(process.env.PORT, () => {
