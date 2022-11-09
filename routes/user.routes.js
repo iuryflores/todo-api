@@ -4,11 +4,13 @@ import bcrypt from "bcryptjs";
 
 const router = Router();
 
+//List Users
 router.get("/user", async (req, res) => {
   const allUsers = await User.find();
   res.status(200).json(allUsers);
 });
 
+// Create Users
 router.post("/user/auth/signup", async (req, res) => {
   const { body } = req;
 
@@ -50,4 +52,9 @@ router.post("/user/auth/signup", async (req, res) => {
     console.error(error);
   }
 });
+
+//Delete Users
+router.delete('/user/:id', async (req, res) => {
+  
+})
 export default router;
