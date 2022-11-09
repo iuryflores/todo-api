@@ -1,6 +1,7 @@
 import { Router } from "express";
 import User from "../models/User.model.js";
 import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
 
 const router = Router();
 
@@ -46,15 +47,23 @@ router.post("/user/auth/signup", async (req, res) => {
     const newUser = await User.create({ name, email, passwordHash });
     const { _id } = newUser;
     res.status(201).json({ name, email, _id });
-    console.log(`User created sucessfully`, {name, email, _id});
+    console.log(`User created sucessfully`, { name, email, _id });
   } catch (error) {
     res.status(400).json({ status: 400, msg: error });
     console.error(error);
   }
 });
 
-//Delete Users
-router.delete('/user/:id', async (req, res) => {
-  
-})
+//Login
+router.post("/login", async (req, res) => {
+  const { email, password } = req.body;
+  try {
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(400).json({ msg: "User not found!" });
+    }
+  } catch (error) {
+    console.error(error);
+  }
+});
 export default router;
