@@ -6,13 +6,13 @@ import jwt from "jsonwebtoken";
 const router = Router();
 
 //List Users
-router.get("/user", async (req, res) => {
+router.get("/user", async (req, res, next) => {
   const allUsers = await User.find();
   res.status(200).json(allUsers);
 });
 
 // Create Users
-router.post("/user/auth/signup", async (req, res) => {
+router.post("/user/auth/signup", async (req, res, next) => {
   const { body } = req;
 
   let { name, email, password } = req.body;
@@ -50,20 +50,41 @@ router.post("/user/auth/signup", async (req, res) => {
     console.log(`User created sucessfully`, { name, email, _id });
   } catch (error) {
     res.status(400).json({ status: 400, msg: error });
-    console.error(error);
+    next(error);
   }
 });
 
 //Login
-router.post("/login", async (req, res) => {
+router.post("/auth/login", async (req, res, next) => {
   const { email, password } = req.body;
   try {
+    //Look for user by email
     const user = await User.findOne({ email });
+
+    //Check if email was found
     if (!user) {
       return res.status(400).json({ msg: "User not found!" });
     }
+
+    //Compare the password if matchs
+    const compareHash = bcrypt.compareSync(password, user.passwordHash);
+
+    //Check if the password is wrong
+    if (!compareHash) {
+      console.log("Wrong password!");
+      return res.status(400).json({ msg: "Wrong password!" });
+    }
+
+    //Create payload
+    const payload = { id: user._id, email: user.email };
+
+    //Create token
+    const token = jwt.sign(payload, process.env.JWT_SECRET, {
+      expiresIn: "8h",
+    });
+    res.status(200).json({ ...payload, token });
   } catch (error) {
-    console.error(error);
+    next(error);
   }
 });
 export default router;
