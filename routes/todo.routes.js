@@ -4,18 +4,21 @@ import Todo from "../models/Todo.model.js";
 const router = Router();
 
 //Homepage
-router.get("/", (req, res) => {
+router.get("/", (req, res, next) => {
   res.send("It's working!");
 });
 
 //Get all Todos
-router.get("/todos", async (req, res) => {
-  const allTodos = await Todo.find();
-  res.status(200).json(allTodos);
+router.get("/todos", async (req, res, next) => {
+  
+    const allTodos = await Todo.find();
+   
+    res.status(200).json(allTodos);
+ 
 });
 
 //Post Todo
-router.post("/todos", async (req, res) => {
+router.post("/todos", async (req, res, next) => {
   const { title } = req.body;
   const { body } = req;
 
@@ -30,12 +33,12 @@ router.post("/todos", async (req, res) => {
     res.status(201).json(newTodo);
     console.log(`${title} created successfully`);
   } catch (error) {
-    res.status(400).json({ status: 400, msg: error });
+    next(error);
   }
 });
 
 //Update Todo
-router.put("/todos/:id", async (req, res) => {
+router.put("/todos/:id", async (req, res, next) => {
   const { id } = req.params;
 
   try {
@@ -45,12 +48,12 @@ router.put("/todos/:id", async (req, res) => {
     res.status(201).json(update);
     console.log(`${update.title} updated successfully`);
   } catch (error) {
-    res.status(400), json({ status: 400, msg: error.message });
+    next(error);
   }
 });
 
 //Delete Todo
-router.delete("/todos/:id", async (req, res) => {
+router.delete("/todos/:id", async (req, res, next) => {
   const { id } = req.params;
   try {
     const todo = await Todo.findByIdAndRemove(id);
@@ -62,7 +65,7 @@ router.delete("/todos/:id", async (req, res) => {
       console.log("Not found!");
     }
   } catch (error) {
-    res.status(400), json({ status: 400, msg: error.message });
+    next(error);
   }
 });
 
