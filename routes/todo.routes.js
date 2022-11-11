@@ -10,11 +10,9 @@ router.get("/", (req, res, next) => {
 
 //Get all Todos
 router.get("/todos", async (req, res, next) => {
-  
-    const allTodos = await Todo.find();
-   
-    res.status(200).json(allTodos);
- 
+  const allTodos = await Todo.find();
+
+  res.status(200).json(allTodos);
 });
 
 //Post Todo
@@ -29,7 +27,7 @@ router.post("/todos", async (req, res, next) => {
       return res.status(400).json({ msg: "Todo already exists!" });
     }
 
-    const newTodo = await Todo.create(body);
+    const newTodo = await Todo.create({ ...body, user: req.user.id });
     res.status(201).json(newTodo);
     console.log(`${title} created successfully`);
   } catch (error) {
